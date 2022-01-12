@@ -10,22 +10,20 @@ library("dplyr")
 library("tibble")
 library("reshape2")
 
-#sample_data
-#data("GlobalPatterns")
 
 #Import data in txt format. 
-otu_mat <- read_excel("~/R/Lab_experiment_2017/Relative Abundance/methanogen_otu.xlsx")
+otu_mat <- read_excel()
 row.names(otu_mat) <- otu_mat$otu
 otu_mat <- otu_mat %>% select (-otu)
 head(otu_mat)
 
-tax_mat <- read_excel("~/R/Lab_experiment_2017/Relative Abundance/methano_tax.xlsx")
+tax_mat <- read_excel()
 tax_mat
 row.names(tax_mat) <- tax_mat$otu
 tax_mat <- tax_mat %>% select (-otu) 
 View(tax_mat)
 
-samples_df<- read_excel("~/R/Lab_experiment_2017/Diversity/Alpha_diversity/samples_df.xlsx")
+samples_df<- read_excel()
 samples_df
 row.names(samples_df) <- samples_df$Sample
 samples_df
@@ -98,7 +96,7 @@ methanogen_rlab_pathway
 
 #import raw data (processed in excel seperatly, took the means of each functional group according to top, middle and roots)
 library(readxl)
-methanogen_fucntional_group_absolute <- read_excel("~/R/Lab_experiment_2017/Relative Abundance/test_function.xlsx")
+methanogen_fucntional_group_absolute <- read_excel()
 View(methanogen_fucntional_group_absolute)
 
 #normalise dataset using dylyr
@@ -155,7 +153,7 @@ levels(my_data$`Functional group`)
 
 #If the levels are not automatically in the correct order, re-order them as follow:
   
-  #methanogen_fucntional_group_absolute$`Functional group` <- ordered(methanogen_fucntional_group_absolute$`Functional group`,
+#methanogen_fucntional_group_absolute$`Functional group` <- ordered(methanogen_fucntional_group_absolute$`Functional group`,
                            levels = c("Acetoclastic" ,"Hydrogenotrophic","Multiple pathway", "Methylotrophic")
 
   
@@ -191,9 +189,9 @@ levels(my_data$`Functional group`)
   
   #The test can be performed using the function kruskal.test() as follow:
     
-    kruskal.test(Abundance ~ methanogen_fucntional_group_absolute$`Functional group`, data = methanogen_fucntional_group_absolute)
+  kruskal.test(Abundance ~ methanogen_fucntional_group_absolute$`Functional group`, data = methanogen_fucntional_group_absolute)
  
-    pairwise.wilcox.test(methanogen_fucntional_group_absolute$Abundance, methanogen_fucntional_group_absolute$`Functional group`,
+  pairwise.wilcox.test(methanogen_fucntional_group_absolute$Abundance, methanogen_fucntional_group_absolute$`Functional group`,
                          p.adjust.method = "BH")
     
     
