@@ -1,10 +1,10 @@
 ##################################################################################
-# 		  created by Eduard Szöcs,	 modified by Joel D. White, 	2020				  #
+# 		  created by Eduard SzÃ¶cs,	 modified by Joel D. White, 	2020				  #
 # 						        PERMANOVA					  		  	  		  #
 ###################################################################################
 
 ###set working directory
-setwd("~/R/Lab_experiment_2017/functional_genes")
+setwd()
 
 
 ### ------------ Load data and package -----------------------------------------
@@ -12,14 +12,14 @@ setwd("~/R/Lab_experiment_2017/functional_genes")
 require(vegan)
 library(ggplot2)
 
-myckel_sp <-read.csv2("~/R/Lab_experiment_2017/functional_genes/KEGG_00680.csv", sep = ";",header = TRUE)
-head(myckel_sp)
-str(myckel_sp)
-class(myckel_sp)
+myckel_sp <-read.csv2()
+head()
+str()
+class()
 
-myckel_env <- read.table("~/R/Lab_experiment_2017/functional_genes/metadata.csv", sep = ";", header = TRUE)
-head(myckel_env)
-str(myckel_env)
+myckel_env <- read.table()
+head()
+str()
 
 
 
@@ -45,7 +45,7 @@ dist_myckel
 nmds <- metaMDS(dist_myckel, distance = "bray", k=2, trymax = 1000)
 
 
-#Export "metaMDS" values to ggplot
+#Export "metaMDS" values for ggplot format
 scrs <- scores(nmds, display = 'sites')
 scrs <- cbind(as.data.frame(scrs), Management = myckel_env$Group)
 cent <- aggregate(cbind(NMDS1, NMDS2) ~ Management, data = scrs, FUN = mean)
@@ -62,12 +62,7 @@ p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = Management, alpha = 0.2)) +
 p
 
 
-ggsave("nmds_group.tiff", units="in", width=10, height=8, dpi=1000, compression = 'lzw')
-
-#############################################################
-# Treatment "Group" appears to cluster together, however there is some overlap between the groups with one sample outlier
-# 2017 appears to have the largest speard when compare to 2018 indicating 
-# more variation in gene abundance in 2017.
+ggsave("nmds_group.tiff", units="in", width=10, height=8, dpi=300, compression = 'lzw')
 
 
 ### ------------ PERMANOVA -----------------------------------------------------
@@ -79,15 +74,6 @@ pmv_Group <- adonis(
   method = "bray")
 pmv_Group
 
-#Genes do not differ significantly between flux groups 0.43 and only explain 7% of the variation within the dataset
-
-group.anosim <- anosim(myckel_sp, myckel_env$Group)
-
-group.anosim
-
-
-results <- capture.output(print(a), print(b))
-writeLines(results, con = file("output_PERMANOVA.txt"))
 
 #Save the details
 results <- capture.output(print(pmv_Group), print(pmv_Group))
@@ -95,10 +81,8 @@ writeLines(results, con = file("output_PERMANOVA.txt"))
 
 #Post Hoc test - pairwise PERMANOVA
 library(RVAideMemoire)
-Wilks_pairwise_Group <- pairwise.perm.manova(dist(myckel_sp,"euclidean"),myckel_env$Group,nperm=10000, test = "Wilks")
+Wilks_pairwise_Group <- pairwise.perm.manova(dist(myckel_sp,"euclidean"),myckel_env$Group,nperm=999, test = "Wilks")
 Wilks_pairwise_Group
-
-#Significant differences do not occur between HFM, MFM, and LFM
 
 #Save the details
 results <- capture.output(print(Wilks_pairwise_Group))
